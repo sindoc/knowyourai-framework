@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+           xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+           xmlns:dc="http://purl.org/dc/elements/1.1/"
+           xmlns:dcterms="http://purl.org/dc/terms/"
+           targetNamespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+           elementFormDefault="qualified">
+
+  <!-- Root element for RDF -->
+  <xs:element name="RDF">
+    <xs:complexType>
+      <xs:sequence>
+        <!-- Allowing multiple skos:Concept elements -->
+        <xs:element name="Description" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <!-- PrefLabel (required) -->
+              <xs:element ref="skos:prefLabel" minOccurs="1" maxOccurs="1"/>
+              <!-- AltLabel (optional) -->
+              <xs:element ref="skos:altLabel" minOccurs="0" maxOccurs="unbounded"/>
+              <!-- Broader term reference -->
+              <xs:element ref="skos:broader" minOccurs="0" maxOccurs="1"/>
+              <!-- Description (required) -->
+              <xs:element ref="dcterms:description" minOccurs="1" maxOccurs="1"/>
+              <!-- Example (optional) -->
+              <xs:element ref="skos:example" minOccurs="0" maxOccurs="unbounded"/>
+              <!-- Risk Profile (custom property) -->
+              <xs:element name="RiskProfile" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="likelihood" type="xs:string"/>
+                    <xs:element name="impact" type="xs:string"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <!-- Description element attributes -->
+            <xs:attribute name="rdf:about" type="xs:anyURI" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <!-- Attributes for RDF root -->
+      <xs:attribute name="xmlns:rdf" type="xs:anyURI" use="required" fixed="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+      <xs:attribute name="xmlns:skos" type="xs:anyURI" use="required" fixed="http://www.w3.org/2004/02/skos/core#"/>
+      <xs:attribute name="xmlns:dc" type="xs:anyURI" use="required" fixed="http://purl.org/dc/elements/1.1/"/>
+      <xs:attribute name="xmlns:dcterms" type="xs:anyURI" use="required" fixed="http://purl.org/dc/terms/"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- Definition for skos:prefLabel -->
+  <xs:element name="prefLabel" type="xs:string"/>
+
+  <!-- Definition for skos:altLabel -->
+  <xs:element name="altLabel" type="xs:string"/>
+
+  <!-- Definition for skos:broader -->
+  <xs:element name="broader">
+    <xs:complexType>
+      <xs:attribute name="rdf:resource" type="xs:anyURI" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- Definition for dcterms:description -->
+  <xs:element name="description" type="xs:string"/>
+
+  <!-- Definition for skos:example -->
+  <xs:element name="example" type="xs:string"/>
+
+</xs:schema>
