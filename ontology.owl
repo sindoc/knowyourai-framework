@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xmlns:knowyourai="https://github.com/sindoc/knowyourai-framework/blob/main/ontology.owl#">
+
+    <!-- Ontology Header -->
+    <owl:Ontology rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ontology.owl">
+        <rdfs:comment>This ontology defines the AI framework and risk profiles, referenced in the ai-human-relationships.rdf</rdfs:comment>
+    </owl:Ontology>
+    
+    <!-- Defining some classes -->
+    <owl:Class rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ontology.owl#RiskProfile"/>
+    <owl:Class rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ontology.owl#AIFramework"/>
+    <owl:Class rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ontology.owl#Resource"/>
+
+    <!-- Defining object properties -->
+    <owl:ObjectProperty rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ontology.owl#hasLikelihood"/>
+    <owl:ObjectProperty rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ontology.owl#hasImpact"/>
+    <owl:ObjectProperty rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ontology.owl#hasResource"/>
+    
+    <!-- Example individual instances -->
+    <owl:NamedIndividual rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ontology.owl#LowLikelihood"/>
+    <owl:NamedIndividual rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ontology.owl#HighImpact"/>
+
+</rdf:RDF>

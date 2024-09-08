@@ -1,0 +1,24 @@
+# Ignore LaTeX output and intermediate files
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.dvi
+*.lof
+*.lot
+*.nav
+*.snm
+*.vrb
+*.idx
+*.ilg
+*.ind
+
+# Ignore backup files
+*~
+*.bak
+

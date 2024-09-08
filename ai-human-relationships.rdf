@@ -1,0 +1,262 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:knowyourai="https://github.com/sindoc/knowyourai-framework/blob/main/ontology.owl#"
+         xmlns:prov="http://www.w3.org/ns/prov#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/"
+         xmlns:dcterms="http://purl.org/dc/terms/">
+
+    <!-- Parent Concept: AI Systems -->
+    <skos:Concept rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-systems">
+        <skos:prefLabel>AI Systems</skos:prefLabel>
+        <dc:description>An overarching concept for all AI categories</dc:description>
+    </skos:Concept>
+
+    <!-- Concept: AI as a Tool -->
+    <skos:Concept rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-a-tool">
+        <skos:prefLabel>AI as a Tool</skos:prefLabel>
+        <skos:altLabel>Human-Controlled AI</skos:altLabel>
+        <skos:broader rdf:resource="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-systems"/>
+        <dc:description>AI acts purely as a tool that is fully controlled by humans, enhancing human capabilities by automating routine tasks or providing analytical insights.</dc:description>
+        <skos:example>AI-powered data analytics tools, Predictive text or grammar checkers, Image enhancement software</skos:example>
+        <knowyourai:humanRole rdf:resource="https://github.com/sindoc/knowyourai-framework/blob/main/ontology.owl#decision-maker-supervisor"/>
+        <knowyourai:humanRoleLabel>Decision-maker, supervisor</knowyourai:humanRoleLabel>
+        <knowyourai:aiRole rdf:resource="https://github.com/sindoc/knowyourai-framework/blob/main/ontology.owl#supporting-tool"/>
+        <knowyourai:aiRoleLabel>Supporting tool, augmenting human tasks</knowyourai:aiRoleLabel>
+        <skos:note>Humans retain full control over the process, AI assists by offering speed and efficiency, AI operates under strict parameters set by humans</skos:note>
+
+        <!-- Risk Profile -->
+        <knowyourai:RiskProfile>
+            <knowyourai:likelihood>Low</knowyourai:likelihood>
+            <knowyourai:impact>Low</knowyourai:impact>
+        </knowyourai:RiskProfile>
+
+        <!-- Resources -->
+        <skos:related rdf:resource="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-a-tool/resources"/>
+    
+        <rdf:Description rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-a-tool/ai_for_everyone_by_andrew_ng.rdf">
+            <dcterms:type>Course</dcterms:type>
+            <dc:title>AI for Everyone by Andrew Ng</dc:title>
+            <foaf:isPrimaryTopicOf rdf:resource="https://www.coursera.org/learn/ai-for-everyone"/>
+        </rdf:Description>
+
+        <rdf:Description rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-a-tool/machine_learning_for_beginners.rdf">
+            <dcterms:type>Course</dcterms:type>
+            <dc:title>Machine Learning for Beginners</dc:title>
+            <foaf:isPrimaryTopicOf rdf:resource="https://learn.microsoft.com/en-us/training/paths/ml-for-beginners/"/>
+        </rdf:Description>
+        
+        <rdf:Description rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-a-tool/artificial_intelligence:_a_guide_for_thinking_humans.rdf">
+            <dcterms:type>Book</dcterms:type>
+            <dc:title>Artificial Intelligence: A Guide for Thinking Humans</dc:title>
+            <foaf:isPrimaryTopicOf rdf:resource="https://www.amazon.com/dp/1250770742"/>
+        </rdf:Description>
+        
+        <rdf:Description rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-a-tool/google_cloud_ai_tools.rdf">
+            <dcterms:type>Tool</dcterms:type>
+            <dc:title>Google Cloud AI Tools</dc:title>
+            <foaf:isPrimaryTopicOf rdf:resource="https://cloud.google.com/products/ai"/>
+        </rdf:Description>
+        
+        <rdf:Description rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-a-tool/iron_man.rdf">
+            <dcterms:type>Movie</dcterms:type>
+            <dc:title>Iron Man</dc:title>
+            <foaf:isPrimaryTopicOf rdf:resource="https://www.imdb.com/title/tt0371746/"/>
+        </rdf:Description>
+        
+    </skos:Concept>
+
+    <!-- Concept: AI as an Assistant -->
+    <skos:Concept rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-an-assistant">
+        <skos:prefLabel>AI as an Assistant</skos:prefLabel>
+        <skos:altLabel>Collaborative AI</skos:altLabel>
+        <skos:broader rdf:resource="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-systems"/>
+        <dc:description>AI works alongside humans in a collaborative capacity, making recommendations and helping to solve problems. Humans retain the final decision-making authority.</dc:description>
+        <skos:example>Virtual assistants (e.g., Siri, Alexa), AI in customer service (chatbots), Decision support systems</skos:example>
+        <knowyourai:humanRole rdf:resource="https://github.com/sindoc/knowyourai-framework/blob/main/ontology.owl#decision-maker-supervisor"/>
+        <knowyourai:humanRoleLabel>Partner, guide, decision-maker</knowyourai:humanRoleLabel>
+        <knowyourai:aiRole rdf:resource="https://github.com/sindoc/knowyourai-framework/blob/main/ontology.owl#supporting-tool"/>
+        <knowyourai:aiRoleLabel>Assistant, advisor, providing inputs and recommendations</knowyourai:aiRoleLabel>
+        <skos:note>Collaborative interaction, AI learns from human feedback, Humans and AI co-create solutions</skos:note>
+
+        <!-- Risk Profile -->
+        <knowyourai:RiskProfile>
+            <knowyourai:likelihood>Medium</knowyourai:likelihood>
+            <knowyourai:impact>Medium</knowyourai:impact>
+        </knowyourai:RiskProfile>
+
+        <!-- Resources -->
+        <skos:related rdf:resource="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-an-assistant/resources"/>
+    
+        <rdf:Description rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-an-assistant/ai_and_robotics:_collaborative_systems.rdf">
+            <dcterms:type>Course</dcterms:type>
+            <dc:title>AI and Robotics: Collaborative Systems</dc:title>
+            <foaf:isPrimaryTopicOf rdf:resource="https://www.futurelearn.com/courses/collaborative-ai"/>
+        </rdf:Description>
+
+        <rdf:Description rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-an-assistant/human_+_machine:_reimagining_work_in_the_age_of_ai.rdf">
+            <dcterms:type>Book</dcterms:type>
+            <dc:title>Human + Machine: Reimagining Work in the Age of AI</dc:title>
+            <foaf:isPrimaryTopicOf rdf:resource="https://www.amazon.com/dp/1633693864"/>
+        </rdf:Description>
+
+        <rdf:Description rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-an-assistant/ibm_watson_assistant.rdf">
+            <dcterms:type>Platform</dcterms:type>
+            <dc:title>IBM Watson Assistant</dc:title>
+            <foaf:isPrimaryTopicOf rdf:resource="https://www.ibm.com/cloud/watson-assistant"/>
+        </rdf:Description>
+
+        <rdf:Description rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-an-assistant/her.rdf">
+            <dcterms:type>Movie</dcterms:type>
+            <dc:title>Her</dc:title>
+            <foaf:isPrimaryTopicOf rdf:resource="https://www.imdb.com/title/tt1798709/"/>
+        </rdf:Description>
+        
+    </skos:Concept>
+
+    <!-- Concept: AI as an Augmenter -->
+    <skos:Concept rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-an-augmenter">
+        <skos:prefLabel>AI as an Augmenter</skos:prefLabel>
+        <skos:altLabel>Human-AI Symbiosis</skos:altLabel>
+        <skos:broader rdf:resource="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-systems"/>
+        <dc:description>AI augments human capabilities, allowing humans to extend their cognitive, physical, or sensory abilities beyond natural limits.</dc:description>
+        <skos:example>AI-enhanced creativity tools, Wearable AI devices, AI in personalized learning platforms</skos:example>
+        <knowyourai:humanRole rdf:resource="https://github.com/sindoc/knowyourai-framework/blob/main/ontology.owl#decision-maker-supervisor"/>
+        <knowyourai:humanRoleLabel>Co-creator, augmented operator</knowyourai:humanRoleLabel>
+        <knowyourai:aiRole rdf:resource="https://github.com/sindoc/knowyourai-framework/blob/main/ontology.owl#supporting-tool"/>
+        <knowyourai:aiRoleLabel>Cognitive or physical augmenter, enabler</knowyourai:aiRoleLabel>
+        <skos:note>AI enhances human performance in real time, Seamless integration between human intuition and AI processing</skos:note>
+
+        <!-- Risk Profile -->
+        <knowyourai:RiskProfile>
+            <knowyourai:likelihood>Medium</knowyourai:likelihood>
+            <knowyourai:impact>High</knowyourai:impact>
+        </knowyourai:RiskProfile>
+
+        <!-- Resources -->
+        <skos:related rdf:resource="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-an-augmenter/resources"/>
+    
+        <rdf:Description rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-an-augmenter/cognitive_technologies:_the_real_opportunities_for_augmenting_human_abilities.rdf">
+            <dcterms:type>Course</dcterms:type>
+            <dc:title>Cognitive Technologies: The Real Opportunities for Augmenting Human Abilities</dc:title>
+            <foaf:isPrimaryTopicOf rdf:resource="https://www.linkedin.com/learning/cognitive-technologies"/>
+        </rdf:Description>
+
+        <rdf:Description rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-an-augmenter/superminds_by_thomas_w._malone.rdf">
+            <dcterms:type>Book</dcterms:type>
+            <dc:title>Superminds by Thomas W. Malone</dc:title>
+            <foaf:isPrimaryTopicOf rdf:resource="https://www.amazon.com/dp/0316349135"/>
+        </rdf:Description>
+
+        <rdf:Description rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-an-augmenter/openai's_gpt-4.rdf">
+            <dcterms:type>Tool</dcterms:type>
+            <dc:title>OpenAI's GPT-4</dc:title>
+            <foaf:isPrimaryTopicOf rdf:resource="https://openai.com/gpt-4"/>
+        </rdf:Description>
+
+        <rdf:Description rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-an-augmenter/ghost_in_the_shell.rdf">
+            <dcterms:type>Movie</dcterms:type>
+            <dc:title>Ghost in the Shell</dc:title>
+            <foaf:isPrimaryTopicOf rdf:resource="https://www.imdb.com/title/tt0113568/"/>
+        </rdf:Description>
+        
+    </skos:Concept>
+
+    <!-- Concept: AI as a Manager -->
+    <skos:Concept rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-a-manager">
+        <skos:prefLabel>AI as a Manager</skos:prefLabel>
+        <skos:altLabel>AI-Led Decision Making</skos:altLabel>
+        <skos:broader rdf:resource="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-systems"/>
+        <dc:description>AI takes on more responsibility by making decisions within defined areas, with limited human oversight.</dc:description>
+        <skos:example>Autonomous vehicles, Algorithmic trading in finance, AI-driven supply chain management</skos:example>
+        <knowyourai:humanRole rdf:resource="https://github.com/sindoc/knowyourai-framework/blob/main/ontology.owl#decision-maker-supervisor"/>
+        <knowyourai:humanRoleLabel>Supervisor, parameter setter</knowyourai:humanRoleLabel>
+        <knowyourai:aiRole rdf:resource="https://github.com/sindoc/knowyourai-framework/blob/main/ontology.owl#supporting-tool"/>
+        <knowyourai:aiRoleLabel>Manager, decision-maker within constraints</knowyourai:aiRoleLabel>
+        <skos:note>AI operates with a high degree of autonomy, Humans set parameters but rely on AI for execution</skos:note>
+
+        <!-- Risk Profile -->
+        <knowyourai:RiskProfile>
+            <knowyourai:likelihood>High</knowyourai:likelihood>
+            <knowyourai:impact>High</knowyourai:impact>
+        </knowyourai:RiskProfile>
+
+        <!-- Resources -->
+        <skos:related rdf:resource="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-a-manager/resources"/>
+    
+        <rdf:Description rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-a-manager/artificial_intelligence_for_decision_making.rdf">
+            <dcterms:type>Course</dcterms:type>
+            <dc:title>Artificial Intelligence for Decision Making</dc:title>
+            <foaf:isPrimaryTopicOf rdf:resource="https://www.edx.org/course/artificial-intelligence-for-decision-making"/>
+        </rdf:Description>
+
+        <rdf:Description rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-a-manager/prediction_machines.rdf">
+            <dcterms:type>Book</dcterms:type>
+            <dc:title>Prediction Machines</dc:title>
+            <foaf:isPrimaryTopicOf rdf:resource="https://www.amazon.com/dp/1633695670"/>
+        </rdf:Description>
+
+        <rdf:Description rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-a-manager/tesla_autopilot.rdf">
+            <dcterms:type>Tool</dcterms:type>
+            <dc:title>Tesla Autopilot</dc:title>
+            <foaf:isPrimaryTopicOf rdf:resource="https://www.tesla.com/autopilot"/>
+        </rdf:Description>
+
+        <rdf:Description rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-a-manager/i,_robot.rdf">
+            <dcterms:type>Movie</dcterms:type>
+            <dc:title>I, Robot</dc:title>
+            <foaf:isPrimaryTopicOf rdf:resource="https://www.imdb.com/title/tt0343818/"/>
+        </rdf:Description>
+        
+    </skos:Concept>
+
+    <!-- Concept: AI as an Autonomous Agent -->
+    <skos:Concept rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-an-autonomous-agent">
+        <skos:prefLabel>AI as an Autonomous Agent</skos:prefLabel>
+        <skos:altLabel>AI Independence</skos:altLabel>
+        <skos:broader rdf:resource="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-systems"/>
+        <dc:description>AI systems function with full autonomy, requiring little to no human intervention.</dc:description>
+        <skos:example>AI in military drones, Fully autonomous research systems, Autonomous self-improving AI</skos:example>
+        <knowyourai:humanRole rdf:resource="https://github.com/sindoc/knowyourai-framework/blob/main/ontology.owl#decision-maker-supervisor"/>
+        <knowyourai:humanRoleLabel>Observer, designer</knowyourai:humanRoleLabel>
+        <knowyourai:aiRole rdf:resource="https://github.com/sindoc/knowyourai-framework/blob/main/ontology.owl#supporting-tool"/>
+        <knowyourai:aiRoleLabel>Fully autonomous entity, decision-maker</knowyourai:aiRoleLabel>
+        <skos:note>AI operates independently and adapts to new situations, Minimal to no human intervention after deployment</skos:note>
+
+        <!-- Risk Profile -->
+        <knowyourai:RiskProfile>
+            <knowyourai:likelihood>High</knowyourai:likelihood>
+            <knowyourai:impact>High</knowyourai:impact>
+        </knowyourai:RiskProfile>
+
+        <!-- Resources -->
+        <skos:related rdf:resource="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-an-autonomous-agent/resources"/>
+    
+        <rdf:Description rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-an-autonomous-agent/robotics_and_autonomous_systems.rdf">
+            <dcterms:type>Course</dcterms:type>
+            <dc:title>Robotics and Autonomous Systems</dc:title>
+            <foaf:isPrimaryTopicOf rdf:resource="https://www.udacity.com/course/robotics-and-autonomous-systems--nd209"/>
+        </rdf:Description>
+
+        <rdf:Description rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-an-autonomous-agent/architects_of_intelligence_by_martin_ford.rdf">
+            <dcterms:type>Book</dcterms:type>
+            <dc:title>Architects of Intelligence by Martin Ford</dc:title>
+            <foaf:isPrimaryTopicOf rdf:resource="https://www.amazon.com/dp/1789954532"/>
+        </rdf:Description>
+
+        <rdf:Description rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-an-autonomous-agent/boston_dynamics.rdf">
+            <dcterms:type>Platform</dcterms:type>
+            <dc:title>Boston Dynamics</dc:title>
+            <foaf:isPrimaryTopicOf rdf:resource="https://www.bostondynamics.com/"/>
+        </rdf:Description>
+
+        <rdf:Description rdf:about="https://github.com/sindoc/knowyourai-framework/blob/main/ai-human-relationships.rdf#ai-as-an-autonomous-agent/ex_machina.rdf">
+            <dcterms:type>Movie</dcterms:type>
+            <dc:title>Ex Machina</dc:title>
+            <foaf:isPrimaryTopicOf rdf:resource="https://www.imdb.com/title/tt0470752/"/>
+        </rdf:Description>
+        
+    </skos:Concept>
+
+</rdf:RDF>
