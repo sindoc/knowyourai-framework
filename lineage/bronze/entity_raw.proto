@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package lineage.bronze;
+
+import "lineage/common/fractal_state.proto";
+
+option python_package = "generated.lineage.bronze";
+
+// Raw entity arriving in the bronze (landing zone) tier.
+// Entities are in native format with minimal transformation.
+// Fractal constant c_bronze = -0.75 + 0i (near period-2 bulb).
+message RawEntity {
+  string                    entity_id     = 1;
+  string                    source_system = 2;
+  bytes                     payload       = 3;  // Opaque native bytes
+  string                    mime_type     = 4;  // e.g. "application/json"
+  string                    lang          = 5;  // BCP-47 language tag
+  lineage.common.FractalState fractal_state = 6;
+}

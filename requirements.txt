@@ -1,0 +1,15 @@
+# Fractal Medallion Lineage — Python dependencies
+# ─────────────────────────────────────────────────────────────────────────────
+# Core proto runtime
+protobuf>=5.27,<6.0
+
+# gRPC (optional — used when 50051 gRPC port is active)
+grpcio>=1.64,<2.0
+grpcio-tools>=1.64,<2.0
+
+# Jinja2 for stem-code generation
+Jinja2>=3.1,<4.0
+
+# Linting / type checking (dev only)
+mypy>=1.10
+ruff>=0.4

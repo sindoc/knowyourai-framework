@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package lineage.silver;
+
+import "lineage/common/fractal_state.proto";
+
+option python_package = "generated.lineage.silver";
+
+// Conformed key-value payload produced after silver-tier curation.
+message EntityPayload {
+  map<string, string> fields = 1;
+  string              lang   = 2;
+}
+
+// Curated entity in the silver tier.
+// Derived from a bronze RawEntity via: z_silver = z_bronze² + c_silver
+// Fractal constant c_silver = -0.12 + 0.74i (Dendrite region — branching lineage).
+message CuratedEntity {
+  string                      entity_id        = 1;
+  string                      derived_from     = 2;  // Source bronze entity_id
+  EntityPayload               conformed_payload = 3;
+  lineage.common.LineageEdge  lineage_edge     = 4;
+  lineage.common.FractalState fractal_state    = 5;
+}

@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package lineage.gold;
+
+import "lineage/common/fractal_state.proto";
+
+option python_package = "generated.lineage.gold";
+
+// Aggregated, business-ready payload at the gold tier.
+message BusinessPayload {
+  map<string, string> attributes      = 1;
+  string              canonical_name  = 2;
+  string              lang            = 3;
+}
+
+// Business-ready entity in the gold tier.
+// Derived from a silver CuratedEntity via: z_gold = z_silver² + c_gold
+// Fractal constant c_gold = 0.285 + 0.01i (Julia-connected, stable attractor).
+message BusinessEntity {
+  string                      entity_id        = 1;
+  string                      derived_from     = 2;  // Source silver entity_id
+  BusinessPayload             business_payload = 3;
+  float                       quality_score    = 4;  // 0.0–1.0; threshold ≥ 0.95
+  repeated string             regulatory_tags  = 5;  // e.g. ["BCBS239", "GDPR"]
+  lineage.common.FractalState fractal_state    = 6;
+  string                      attractor_class  = 7;
+}

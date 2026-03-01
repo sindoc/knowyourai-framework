@@ -1,0 +1,80 @@
+{# ===== J2 STEM CODE: Fractal Tier Transformation ===== #}
+{# This template generates one Python module per medallion tier.       #}
+{# Render with: jinja2 tier_transform.py.j2 -D tier=bronze             #}
+"""
+Auto-generated fractal lineage transformer for tier: {{ tier.name }}
+Fractal constant c = {{ tier.c_real }} + {{ tier.c_imaginary }}i
+Generated from: fractal_medallion_lineage.xml
+DO NOT EDIT — regenerate via: python -m src.codegen
+"""
+
+import cmath
+from dataclasses import dataclass
+from typing import Optional
+
+@dataclass
+class FractalState:
+    z: complex
+    iteration: int
+    bounded: bool
+    magnitude: float
+    attractor_class: Optional[str] = None
+
+
+SEED = complex({{ seed.real }}, {{ seed.imaginary }})  # z₀ = {{ seed.real }} + {{ seed.imaginary }}i
+C_{{ tier.name | upper }} = complex({{ tier.c_real }}, {{ tier.c_imaginary }})
+ESCAPE_RADIUS  = {{ escape_radius }}
+MAX_ITERATIONS = {{ max_iterations }}
+
+
+def iterate_{{ tier.name }}(z: complex, c: complex = C_{{ tier.name | upper }}) -> FractalState:
+    """Single fractal iteration for the {{ tier.name }} tier.
+
+    Applies z_(n+1) = z_n² + c and classifies the resulting attractor.
+    """
+    z_next    = z ** 2 + c
+    magnitude = abs(z_next)
+    bounded   = magnitude <= ESCAPE_RADIUS
+    return FractalState(
+        z=z_next,
+        iteration={{ tier.order }} + 1,
+        bounded=bounded,
+        magnitude=magnitude,
+        attractor_class=classify_attractor(z_next) if bounded else "divergent",
+    )
+
+
+def classify_attractor(z: complex) -> str:
+    """Classify the attractor type based on convergence behavior."""
+    mag = abs(z)
+    if mag < 0.01:
+        return "fixed_point"
+    elif mag < 1.0:
+        return "periodic"
+    else:
+        return "chaotic"
+
+
+def transform_entity(entity_id: str, payload: bytes, lang: str = "{{ default_lang }}"):
+    """Transform entity from {{ tier.input_tier | default('source') }} → {{ tier.name }}.
+
+    Language-sensitive processing for: {{ supported_langs | join(', ') }}
+
+    Returns a dict ready for proto serialization.
+    """
+    {% for op in tier.operations %}
+    # Operation: {{ op.type }}
+    {% if op.lang_sensitive | default(false) %}
+    payload = {{ op.type }}_multilingual(payload, lang=lang)
+    {% else %}
+    payload = {{ op.type }}(payload)
+    {% endif %}
+    {% endfor %}
+
+    return {
+        "entity_id":    f"{entity_id}_{{ tier.name }}",
+        "derived_from": entity_id,
+        "payload":      payload,
+        "fractal_state": iterate_{{ tier.name }}(SEED if {{ tier.order }} == 0 else _previous_z),
+        "lang":         lang,
+    }
