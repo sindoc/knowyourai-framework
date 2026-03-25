@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Fractal Medallion Lineage — Request/Response Template
+  ======================================================
+  Models data lineage as fractal iteration across medallion layers.
+  Seed point z₀ = -1 + 0i on the complex plane.
+  Each transformation: z_(n+1) = z_n² + c
+  where c = entity transformation constant per medallion tier.
+
+  Execution: MIME-typed request → Proto serialization → Lambda → Docker
+  Templating: Jinja2 (J2) stem code generation
+-->
+
+<FractalLineageManifest
+  xmlns="urn:fractal:medallion:lineage:v1"
+  xmlns:proto="urn:proto:directory:v1"
+  xmlns:mime="urn:ietf:params:mime"
+  xmlns:lambda="urn:aws:lambda:execution:v1"
+  xmlns:docker="urn:oci:container:v1"
+  xmlns:j2="urn:jinja2:template:v1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  schemaVersion="1.0.0">
+
+  <!-- ============================================================
+       SESSION: Request/Fulfillment State Machine
+       ============================================================ -->
+
+  <Session id="{{session_id}}" timestamp="{{iso_timestamp}}">
+    <State>
+      <Asked>
+        <RequestId>{{request_id}}</RequestId>
+        <Origin>client</Origin>
+        <Intent>lineage_traversal</Intent>
+        <Locale lang="{{lang_code}}">
+          <!-- Language-sensitive entity resolution -->
+          <SupportedLanguages>
+            <Language code="en" weight="1.0"/>
+            <Language code="fr" weight="0.9"/>
+            <Language code="fa" weight="0.8"/>
+          </SupportedLanguages>
+          <EntityResolutionStrategy>lang_sensitive_fuzzy_match</EntityResolutionStrategy>
+        </Locale>
+      </Asked>
+      <Fulfilled status="pending">
+        <ResponseId/>
+        <CompletionTimestamp/>
+        <FractalDepthReached>0</FractalDepthReached>
+      </Fulfilled>
+    </State>
+  </Session>
+
+  <!-- ============================================================
+       COMPLEX PLANE: Fractal Seed & Iteration Model
+       z₀ = -1 + 0i  (the canonical Mandelbrot critical point)
+       Each medallion tier applies: z_(n+1) = z_n² + c_tier
+       ============================================================ -->
+
+  <ComplexPlane>
+    <SeedPoint>
+      <Real>-1</Real>
+      <Imaginary>0</Imaginary>
+      <Notation>z₀ = -1 + 0i</Notation>
+      <Interpretation>
+        Root-level origin of lineage graph.
+        All entity transformations diverge from this seed.
+        Bounded iterations → stable lineage.
+        Unbounded iterations → anomaly detection trigger.
+      </Interpretation>
+    </SeedPoint>
+
+    <IterationFormula>
+      <Expression>z_(n+1) = z_n² + c</Expression>
+      <MaxIterations>{{max_depth | default(256)}}</MaxIterations>
+      <EscapeRadius>2.0</EscapeRadius>
+      <ConvergenceThreshold>1e-10</ConvergenceThreshold>
+    </IterationFormula>
+
+    <!-- Per-tier transformation constants -->
+    <TierConstants>
+      <Constant tier="bronze"  real="-0.75" imaginary="0.0"
+               meaning="Raw ingestion — minimal transform, near-period-2 bulb"/>
+      <Constant tier="silver"  real="-0.12" imaginary="0.74"
+               meaning="Curated/conformed — Dendrite region, branching lineage"/>
+      <Constant tier="gold"    real="0.285"  imaginary="0.01"
+               meaning="Business-ready — Julia-connected, stable attractor"/>
+    </TierConstants>
+  </ComplexPlane>
+
+  <!-- ============================================================
+       MEDALLION VERTICAL LINEAGE
+       Bronze → Silver → Gold with fractal branching at each tier
+       ============================================================ -->
+
+  <MedallionLineage>
+
+    <!-- BRONZE: Raw Ingestion -->
+    <Tier name="bronze" order="0" complexConstant="c_bronze">
+      <Description>Raw data landing zone. Entities arrive in native format.</Description>
+      <Entities>
+        <Entity id="{{entity_id}}">
+          <Name lang="{{lang_code}}">{{entity_name}}</Name>
+          <Phenomenon>
+            <!-- Language-sensitive phenomenon linking -->
+            <PhenomenonId>{{phenomenon_id}}</PhenomenonId>
+            <Labels>
+              <Label lang="en">{{phenomenon_label_en}}</Label>
+              <Label lang="fr">{{phenomenon_label_fr}}</Label>
+              <Label lang="fa">{{phenomenon_label_fa}}</Label>
+            </Labels>
+            <RelatedMaterials>
+              <Material type="{{mime_type}}" ref="{{material_uri}}"/>
+            </RelatedMaterials>
+          </Phenomenon>
+          <FractalState>
+            <Iteration>0</Iteration>
+            <Z_real>-1</Z_real>
+            <Z_imaginary>0</Z_imaginary>
+            <Magnitude>1.0</Magnitude>
+            <Bounded>true</Bounded>
+          </FractalState>
+        </Entity>
+      </Entities>
+      <Lineage direction="vertical" from="source" to="silver"/>
+    </Tier>
+
+    <!-- SILVER: Curated / Conformed -->
+    <Tier name="silver" order="1" complexConstant="c_silver">
+      <Description>Cleansed, conformed, deduplicated. Lineage branches fractally.</Description>
+      <TransformationRule>
+        <Input tierRef="bronze"/>
+        <Formula>z_(n+1) = z_bronze² + c_silver</Formula>
+        <Operations>
+          <Operation type="deduplicate" langSensitive="true"/>
+          <Operation type="conform_schema" target="proto:EntitySchema"/>
+          <Operation type="resolve_multilingual_entities"/>
+        </Operations>
+      </TransformationRule>
+      <Entities>
+        <!-- Populated by fractal iteration of bronze entities -->
+        <Entity id="{{entity_id}}_silver" derivedFrom="{{entity_id}}">
+          <FractalState>
+            <Iteration>1</Iteration>
+            <Z_real>{{z1_real}}</Z_real>
+            <Z_imaginary>{{z1_imaginary}}</Z_imaginary>
+            <Magnitude>{{z1_magnitude}}</Magnitude>
+            <Bounded>{{z1_bounded}}</Bounded>
+          </FractalState>
+        </Entity>
+      </Entities>
+      <Lineage direction="vertical" from="bronze" to="gold"/>
+    </Tier>
+
+    <!-- GOLD: Business-Ready -->
+    <Tier name="gold" order="2" complexConstant="c_gold">
+      <Description>Aggregated, business-ready. Stable fractal attractor.</Description>
+      <TransformationRule>
+        <Input tierRef="silver"/>
+        <Formula>z_(n+1) = z_silver² + c_gold</Formula>
+        <Operations>
+          <Operation type="aggregate" granularity="business_entity"/>
+          <Operation type="quality_score" threshold="0.95"/>
+          <Operation type="regulatory_tag" frameworks="BCBS239,GDPR"/>
+        </Operations>
+      </TransformationRule>
+      <Entities>
+        <Entity id="{{entity_id}}_gold" derivedFrom="{{entity_id}}_silver">
+          <FractalState>
+            <Iteration>2</Iteration>
+            <Z_real>{{z2_real}}</Z_real>
+            <Z_imaginary>{{z2_imaginary}}</Z_imaginary>
+            <Magnitude>{{z2_magnitude}}</Magnitude>
+            <Bounded>{{z2_bounded}}</Bounded>
+            <AttractorClass>{{attractor_type}}</AttractorClass>
+          </FractalState>
+        </Entity>
+      </Entities>
+      <Lineage direction="vertical" from="silver" to="consumer"/>
+    </Tier>
+
+  </MedallionLineage>
+
+  <!-- ============================================================
+       MIME & PROTO: Content Negotiation + Serialization
+       ============================================================ -->
+
+  <ContentNegotiation>
+    <mime:Request>
+      <mime:Accept>application/x-protobuf</mime:Accept>
+      <mime:Accept>application/json</mime:Accept>
+      <mime:Accept>application/xml</mime:Accept>
+      <mime:ContentType>application/x-protobuf</mime:ContentType>
+      <mime:AcceptLanguage>{{lang_code}}, en;q=0.9, fr;q=0.8</mime:AcceptLanguage>
+    </mime:Request>
+    <mime:Response>
+      <mime:ContentType>application/x-protobuf</mime:ContentType>
+      <mime:ContentLanguage>{{response_lang}}</mime:ContentLanguage>
+    </mime:Response>
+  </ContentNegotiation>
+
+  <proto:Directory>
+    <!--
+    Proto definitions govern the wire format of entity lineage messages.
+    Each medallion tier has its own .proto schema.
+    -->
+    <proto:Schema tier="bronze" file="lineage/bronze/entity_raw.proto">
+      <proto:Message name="RawEntity">
+        <proto:Field number="1" name="entity_id"     type="string"/>
+        <proto:Field number="2" name="source_system" type="string"/>
+        <proto:Field number="3" name="payload"       type="bytes"/>
+        <proto:Field number="4" name="mime_type"     type="string"/>
+        <proto:Field number="5" name="lang"          type="string"/>
+        <proto:Field number="6" name="fractal_state" type="FractalState"/>
+      </proto:Message>
+    </proto:Schema>
+
+    <proto:Schema tier="silver" file="lineage/silver/entity_curated.proto">
+      <proto:Message name="CuratedEntity">
+        <proto:Field number="1" name="entity_id"        type="string"/>
+        <proto:Field number="2" name="derived_from"     type="string"/>
+        <proto:Field number="3" name="conformed_payload" type="EntityPayload"/>
+        <proto:Field number="4" name="lineage_edge"     type="LineageEdge"/>
+        <proto:Field number="5" name="fractal_state"    type="FractalState"/>
+      </proto:Message>
+    </proto:Schema>
+
+    <proto:Schema tier="gold" file="lineage/gold/entity_business.proto">
+      <proto:Message name="BusinessEntity">
+        <proto:Field number="1" name="entity_id"        type="string"/>
+        <proto:Field number="2" name="derived_from"     type="string"/>
+        <proto:Field number="3" name="business_payload" type="BusinessPayload"/>
+        <proto:Field number="4" name="quality_score"    type="float"/>
+        <proto:Field number="5" name="regulatory_tags"  type="repeated string"/>
+        <proto:Field number="6" name="fractal_state"    type="FractalState"/>
+        <proto:Field number="7" name="attractor_class"  type="string"/>
+      </proto:Message>
+    </proto:Schema>
+
+    <!-- Shared fractal state message -->
+    <proto:Schema file="lineage/common/fractal_state.proto">
+      <proto:Message name="FractalState">
+        <proto:Field number="1" name="iteration"      type="int32"/>
+        <proto:Field number="2" name="z_real"         type="double"/>
+        <proto:Field number="3" name="z_imaginary"    type="double"/>
+        <proto:Field number="4" name="magnitude"      type="double"/>
+        <proto:Field number="5" name="bounded"        type="bool"/>
+        <proto:Field number="6" name="attractor_class" type="string"/>
+      </proto:Message>
+      <proto:Message name="LineageEdge">
+        <proto:Field number="1" name="source_tier"            type="string"/>
+        <proto:Field number="2" name="target_tier"            type="string"/>
+        <proto:Field number="3" name="transformation_formula" type="string"/>
+        <proto:Field number="4" name="timestamp"              type="google.protobuf.Timestamp"/>
+      </proto:Message>
+    </proto:Schema>
+  </proto:Directory>
+
+  <!-- ============================================================
+       LAMBDA EXECUTION: Serverless Fractal Iteration Engine
+       ============================================================ -->
+
+  <lambda:Execution>
+    <lambda:Function name="fractal-lineage-iterator">
+      <lambda:Runtime>python3.12</lambda:Runtime>
+      <lambda:Handler>lineage.handler.iterate</lambda:Handler>
+      <lambda:Timeout>900</lambda:Timeout>
+      <lambda:MemoryMB>1024</lambda:MemoryMB>
+      <lambda:Environment>
+        <lambda:Variable name="SEED_REAL"         value="-1"/>
+        <lambda:Variable name="SEED_IMAGINARY"    value="0"/>
+        <lambda:Variable name="MAX_ITERATIONS"    value="{{max_depth}}"/>
+        <lambda:Variable name="ESCAPE_RADIUS"     value="2.0"/>
+        <lambda:Variable name="PROTO_DIR"         value="/opt/proto/lineage"/>
+        <lambda:Variable name="MEDALLION_TIERS"   value="bronze,silver,gold"/>
+      </lambda:Environment>
+      <lambda:Layers>
+        <lambda:Layer arn="arn:aws:lambda:{{region}}:{{account}}:layer:protobuf-runtime:1"/>
+        <lambda:Layer arn="arn:aws:lambda:{{region}}:{{account}}:layer:lineage-common:1"/>
+      </lambda:Layers>
+    </lambda:Function>
+
+    <!-- Request/Response contract -->
+    <lambda:RequestTemplate>
+      <lambda:Event>
+        <SessionId>{{session_id}}</SessionId>
+        <EntityId>{{entity_id}}</EntityId>
+        <SourceTier>{{source_tier}}</SourceTier>
+        <TargetTier>{{target_tier}}</TargetTier>
+        <FractalParams>
+          <CurrentZ real="{{z_real}}" imaginary="{{z_imaginary}}"/>
+          <TierConstant real="{{c_real}}" imaginary="{{c_imaginary}}"/>
+        </FractalParams>
+        <MimeType>{{mime_type}}</MimeType>
+        <Language>{{lang_code}}</Language>
+      </lambda:Event>
+    </lambda:RequestTemplate>
+
+    <lambda:ResponseTemplate>
+      <lambda:Result>
+        <SessionId>{{session_id}}</SessionId>
+        <EntityId>{{derived_entity_id}}</EntityId>
+        <Tier>{{target_tier}}</Tier>
+        <FractalResult>
+          <NewZ real="{{new_z_real}}" imaginary="{{new_z_imaginary}}"/>
+          <Magnitude>{{new_magnitude}}</Magnitude>
+          <Bounded>{{is_bounded}}</Bounded>
+          <IterationCount>{{iteration}}</IterationCount>
+        </FractalResult>
+        <LineageEdge from="{{entity_id}}" to="{{derived_entity_id}}"
+                     formula="z² + c_{{target_tier}}"/>
+        <Status>fulfilled</Status>
+      </lambda:Result>
+    </lambda:ResponseTemplate>
+  </lambda:Execution>
+
+  <!-- ============================================================
+       DOCKER: Container Execution Environment
+       ============================================================ -->
+
+  <docker:Container>
+    <docker:Image>
+      <docker:Registry>{{ecr_registry}}</docker:Registry>
+      <docker:Repository>fractal-lineage-engine</docker:Repository>
+      <docker:Tag>{{version | default('latest')}}</docker:Tag>
+    </docker:Image>
+
+    <docker:Compose>
+      <docker:Service name="lineage-engine">
+        <docker:Build context="." dockerfile="Dockerfile.lineage"/>
+        <docker:Ports>
+          <docker:Port host="8080" container="8080"/>
+          <docker:Port host="50051" container="50051" protocol="grpc"/>
+        </docker:Ports>
+        <docker:Volumes>
+          <docker:Volume host="./proto"        container="/opt/proto"     mode="ro"/>
+          <docker:Volume host="./templates/j2" container="/opt/templates" mode="ro"/>
+        </docker:Volumes>
+        <docker:Environment>
+          <docker:Env key="PROTO_DIR"       value="/opt/proto/lineage"/>
+          <docker:Env key="J2_TEMPLATE_DIR" value="/opt/templates"/>
+          <docker:Env key="MEDALLION_MODE"  value="vertical"/>
+          <docker:Env key="FRACTAL_SEED"    value="-1+0i"/>
+        </docker:Environment>
+        <docker:HealthCheck>
+          <docker:Command>curl -f http://localhost:8080/health</docker:Command>
+          <docker:Interval>30s</docker:Interval>
+          <docker:Retries>3</docker:Retries>
+        </docker:HealthCheck>
+      </docker:Service>
+
+      <docker:Service name="proto-compiler">
+        <docker:Image>namely/protoc-all:1.51</docker:Image>
+        <docker:Command>protoc --python_out=/out --grpc_out=/out -I/proto /proto/**/*.proto</docker:Command>
+        <docker:Volumes>
+          <docker:Volume host="./proto"     container="/proto" mode="ro"/>
+          <docker:Volume host="./generated" container="/out"/>
+        </docker:Volumes>
+      </docker:Service>
+    </docker:Compose>
+  </docker:Container>
+
+  <!-- ============================================================
+       J2 (JINJA2) STEM CODE TEMPLATES
+       Generate tier-specific transformation code from this manifest
+       ============================================================ -->
+
+  <j2:Templates>
+    <j2:Template name="tier_transform" file="tier_transform.py.j2">
+      <j2:Description>
+        Generates Python transformation code for each medallion tier.
+        Stem code: the base template from which tier-specific logic grows fractally.
+      </j2:Description>
+      <j2:Content><![CDATA[
+{# ===== J2 STEM CODE: Fractal Tier Transformation ===== #}
+{# This template generates one Python module per medallion tier #}
+
+"""
+Auto-generated fractal lineage transformer for tier: {{ tier.name }}
+Fractal constant c = {{ tier.c_real }} + {{ tier.c_imaginary }}i
+Generated from: fractal_medallion_lineage.xml
+"""
+
+import cmath
+from dataclasses import dataclass
+from typing import Optional
+
+@dataclass
+class FractalState:
+    z: complex
+    iteration: int
+    bounded: bool
+    magnitude: float
+    attractor_class: Optional[str] = None
+
+SEED = complex({{ seed.real }}, {{ seed.imaginary }})  # z₀ = {{ seed.real }} + {{ seed.imaginary }}i
+C_{{ tier.name | upper }} = complex({{ tier.c_real }}, {{ tier.c_imaginary }})
+ESCAPE_RADIUS = {{ escape_radius }}
+MAX_ITERATIONS = {{ max_iterations }}
+
+def iterate_{{ tier.name }}(z: complex, c: complex = C_{{ tier.name | upper }}) -> FractalState:
+    """Single fractal iteration for {{ tier.name }} tier."""
+    z_next = z ** 2 + c
+    magnitude = abs(z_next)
+    bounded = magnitude <= ESCAPE_RADIUS
+    return FractalState(
+        z=z_next,
+        iteration={{ tier.order }} + 1,
+        bounded=bounded,
+        magnitude=magnitude,
+        attractor_class=classify_attractor(z_next) if bounded else "divergent"
+    )
+
+def classify_attractor(z: complex) -> str:
+    """Classify the attractor type based on convergence behavior."""
+    mag = abs(z)
+    if mag < 0.01:
+        return "fixed_point"
+    elif mag < 1.0:
+        return "periodic"
+    else:
+        return "chaotic"
+
+def transform_entity(entity_id: str, payload: bytes, lang: str = "{{ default_lang }}"):
+    """
+    Transform entity from {{ tier.input_tier | default('source') }} → {{ tier.name }}.
+    Language-sensitive processing for: {{ supported_langs | join(', ') }}
+    """
+    {% for op in tier.operations %}
+    # Operation: {{ op.type }}
+    {% if op.lang_sensitive %}
+    payload = {{ op.type }}_multilingual(payload, lang="{{ lang }}")
+    {% else %}
+    payload = {{ op.type }}(payload)
+    {% endif %}
+    {% endfor %}
+
+    return {
+        "entity_id": f"{entity_id}_{{ tier.name }}",
+        "derived_from": entity_id,
+        "payload": payload,
+        "fractal_state": iterate_{{ tier.name }}(SEED if {{ tier.order }} == 0 else _previous_z),
+        "lang": lang,
+    }
+]]></j2:Content>
+    </j2:Template>
+
+    <j2:Template name="dockerfile" file="Dockerfile.j2">
+      <j2:Content><![CDATA[
+FROM python:3.12-slim AS base
+WORKDIR /app
+
+# Proto compilation stage
+FROM namely/protoc-all:1.51 AS proto
+COPY proto/ /proto/
+RUN protoc --python_out=/out --grpc-python_out=/out -I/proto /proto/**/*.proto
+
+# Runtime
+FROM base AS runtime
+COPY --from=proto /out/ /app/generated/
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY src/ /app/src/
+COPY templates/j2/ /app/templates/
+
+ENV FRACTAL_SEED="-1+0i"
+ENV MEDALLION_TIERS="bronze,silver,gold"
+ENV PROTO_DIR="/app/generated"
+
+EXPOSE 8080 50051
+CMD ["python", "-m", "src.lineage_engine"]
+]]></j2:Content>
+    </j2:Template>
+
+    <j2:Template name="lambda_handler" file="lambda_handler.py.j2">
+      <j2:Content><![CDATA[
+"""
+Lambda handler for fractal lineage iteration.
+Processes request → applies fractal transformation → returns response.
+MIME: application/x-protobuf | application/json
+"""
+
+import json
+import cmath
+import os
+from google.protobuf import json_format
+
+# Import generated proto classes
+{% for tier in tiers %}
+from generated.lineage.{{ tier.name }} import {{ tier.proto_message }}_pb2
+{% endfor %}
+from generated.lineage.common import fractal_state_pb2
+
+TIER_CONSTANTS = {
+{% for tier in tiers %}
+    "{{ tier.name }}": complex({{ tier.c_real }}, {{ tier.c_imaginary }}),
+{% endfor %}
+}
+
+def iterate(event, context):
+    """
+    Lambda entry point.
+    Session: {{ session_id }}
+    """
+    session_id  = event["SessionId"]
+    entity_id   = event["EntityId"]
+    source_tier = event["SourceTier"]
+    target_tier = event["TargetTier"]
+    lang        = event.get("Language", "en")
+
+    # Parse current fractal state
+    z = complex(
+        float(event["FractalParams"]["CurrentZ"]["real"]),
+        float(event["FractalParams"]["CurrentZ"]["imaginary"])
+    )
+    c = TIER_CONSTANTS[target_tier]
+
+    # Fractal iteration: z_(n+1) = z_n² + c
+    z_new     = z ** 2 + c
+    magnitude = abs(z_new)
+    bounded   = magnitude <= float(os.environ.get("ESCAPE_RADIUS", "2.0"))
+
+    return {
+        "SessionId": session_id,
+        "EntityId":  f"{entity_id}_{target_tier}",
+        "Tier":      target_tier,
+        "FractalResult": {
+            "NewZ":           {"real": z_new.real, "imaginary": z_new.imag},
+            "Magnitude":      magnitude,
+            "Bounded":        bounded,
+            "IterationCount": int(event.get("FractalParams", {}).get("iteration", 0)) + 1
+        },
+        "LineageEdge": {
+            "from":    entity_id,
+            "to":      f"{entity_id}_{target_tier}",
+            "formula": f"z² + c_{target_tier}"
+        },
+        "Status": "fulfilled"
+    }
+]]></j2:Content>
+    </j2:Template>
+  </j2:Templates>
+
+</FractalLineageManifest>

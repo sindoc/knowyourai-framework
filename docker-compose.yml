@@ -1,0 +1,45 @@
+version: "3.9"
+
+# ============================================================
+# Fractal Medallion Lineage — Docker Compose
+# Services:
+#   lineage-engine   HTTP :8080 + gRPC :50051
+#   proto-compiler   One-shot protoc compilation
+# ============================================================
+
+services:
+
+  lineage-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile.lineage
+    ports:
+      - "8080:8080"
+      - "50051:50051"
+    volumes:
+      - ./lineage:/opt/proto:ro
+      - ./templates/j2:/opt/templates:ro
+    environment:
+      PROTO_DIR:       /opt/proto
+      J2_TEMPLATE_DIR: /opt/templates
+      MEDALLION_MODE:  vertical
+      FRACTAL_SEED:    "-1+0i"
+      ESCAPE_RADIUS:   "2.0"
+      MAX_ITERATIONS:  "256"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout:  5s
+      retries:  3
+    depends_on:
+      proto-compiler:
+        condition: service_completed_successfully
+
+  proto-compiler:
+    image: namely/protoc-all:1.51
+    command: >
+      protoc --python_out=/out --grpc-python_out=/out
+             -I/proto /proto/**/*.proto
+    volumes:
+      - ./lineage:/proto:ro
+      - ./generated:/out

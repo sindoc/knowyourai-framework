@@ -1,0 +1,35 @@
+# ============================================================
+# Auto-generated Dockerfile for fractal-lineage-engine
+# Generated from: fractal_medallion_lineage.xml / Dockerfile.j2
+# DO NOT EDIT — regenerate via: python -m src.codegen
+# ============================================================
+
+# ── Stage 1: Proto compilation ────────────────────────────────
+FROM namely/protoc-all:1.51 AS proto
+COPY lineage/ /proto/lineage/
+RUN mkdir -p /out && \
+    protoc --python_out=/out --grpc-python_out=/out \
+           -I/proto /proto/lineage/**/*.proto
+
+# ── Stage 2: Python base ──────────────────────────────────────
+FROM python:3.12-slim AS base
+WORKDIR /app
+
+# ── Stage 3: Runtime ──────────────────────────────────────────
+FROM base AS runtime
+COPY --from=proto /out/ /app/generated/
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY src/       /app/src/
+COPY templates/ /app/templates/
+
+ENV FRACTAL_SEED="-1+0i"
+ENV MEDALLION_TIERS="bronze,silver,gold"
+ENV PROTO_DIR="/app/generated"
+ENV ESCAPE_RADIUS="2.0"
+
+EXPOSE 8080 50051
+HEALTHCHECK --interval=30s --retries=3 \
+    CMD curl -f http://localhost:8080/health || exit 1
+
+CMD ["python", "-m", "src.lineage_engine"]

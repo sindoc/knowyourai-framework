@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package lineage.common;
+
+import "google/protobuf/timestamp.proto";
+
+option python_package = "generated.lineage.common";
+
+// Fractal iteration state carried by every medallion entity.
+// Seed z₀ = -1 + 0i; each tier applies z_(n+1) = z_n² + c_tier.
+message FractalState {
+  int32  iteration       = 1;  // Medallion depth (0 = bronze, 1 = silver, 2 = gold)
+  double z_real          = 2;  // Re(z_n)
+  double z_imaginary     = 3;  // Im(z_n)
+  double magnitude       = 4;  // |z_n|
+  bool   bounded         = 5;  // |z_n| <= escape_radius → stable lineage
+  string attractor_class = 6;  // "fixed_point" | "periodic" | "chaotic" | "divergent"
+}
+
+// Directed edge in the vertical lineage graph.
+message LineageEdge {
+  string                    source_tier            = 1;
+  string                    target_tier            = 2;
+  string                    transformation_formula = 3;  // e.g. "z² + c_silver"
+  google.protobuf.Timestamp timestamp              = 4;
+}

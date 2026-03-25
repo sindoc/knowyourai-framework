@@ -22,3 +22,11 @@
 *~
 *.bak
 
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Generated proto stubs (compile on deploy)
+generated/
+
